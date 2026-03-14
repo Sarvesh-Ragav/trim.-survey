@@ -285,6 +285,34 @@
   .btn-next .arrow { font-size: 18px; transition: transform 0.2s; }
   .btn-next:hover .arrow { transform: translateX(4px); }
 
+  .btn-back {
+    background: transparent;
+    color: var(--gray4);
+    border: 1px solid var(--gray2);
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .cta-wrap.shake { animation: shake 0.4s ease; }
+
   .press-hint {
     font-size: 12px;
     color: var(--gray4);
@@ -606,9 +634,10 @@
         <div class="key">D</div><div class="label">Stay consistent and maintain what I have</div>
       </div>
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-1">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="nextScreen()" id="btn-1" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -631,9 +660,10 @@
         <div class="key">D</div><div class="label">I don't track at all</div>
       </div>
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-2">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="handleQ2Next()" id="btn-2" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -660,9 +690,10 @@
       <div class="key" id="other-2b-key">E</div>
       <input type="text" id="other-2b" placeholder="Something else — type the app name" oninput="handleOtherInput('2b', this.value)" />
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-2b">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="goToScreenByName('screen-3')" id="btn-2b" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -689,9 +720,10 @@
       <div class="key">E</div>
       <input type="text" id="other-3" placeholder="Something else — tell us in your own words" oninput="handleOtherInput('3', this.value)" />
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-3">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="nextScreen()" id="btn-3" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -720,9 +752,10 @@
         <div class="key">✓</div><div class="label">Home gym setup</div>
       </div>
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-4">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="nextScreen()" id="btn-4" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -745,9 +778,10 @@
         <div class="key">D</div><div class="label">Every day — gym is life</div>
       </div>
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-5">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="nextScreen()" id="btn-5" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -774,9 +808,10 @@
       <div class="key">E</div>
       <input type="text" id="other-6" placeholder="Something else — your honest take" oninput="handleOtherInput('6', this.value)" />
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-6">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="showResult()" id="btn-6" style="opacity:0.4;pointer-events:none">See my result <span class="arrow">→</span></button>
-      <div class="press-hint">press <kbd>Enter</kbd></div>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -789,8 +824,10 @@
       <input type="text" id="freetext-7" placeholder="Type your answer here…" oninput="handleFreeText(this.value)" />
       <div class="input-hint">Press Enter to continue, or skip →</div>
     </div>
-    <div class="cta-wrap">
+    <div class="cta-wrap" id="cta-7">
+      <button class="btn-back" onclick="prevScreen()">← Back</button>
       <button class="btn-next" onclick="showResult()" id="btn-7" style="opacity:1;pointer-events:all">See my result <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
@@ -848,6 +885,29 @@
   }
 
   function nextScreen() { goTo(current + 1); }
+
+  function prevScreen() {
+    if (current <= 0) return;
+    goTo(current - 1);
+  }
+
+  function canAdvance(id) {
+    const qNum = id === 'screen-2b' ? '2b' : id.replace('screen-', '');
+    if (id === 'screen-7') return true; // optional
+    if (id === 'screen-4') return multiAnswers['4'] && multiAnswers['4'].length > 0;
+    const btn = document.getElementById('btn-' + qNum);
+    return btn && btn.style.pointerEvents !== 'none';
+  }
+
+  function triggerShake(id) {
+    const cta = document.querySelector(`#${id} .cta-wrap`);
+    if (cta) {
+      cta.classList.remove('shake');
+      void cta.offsetWidth; // reflow
+      cta.classList.add('shake');
+      setTimeout(() => cta.classList.remove('shake'), 400);
+    }
+  }
 
   // Q2: if they picked "app" → show Q2b (which app), else skip to Q3
   function handleQ2Next() {
@@ -985,12 +1045,20 @@
     });
   }
 
-  // Keyboard: A/B/C/D to select, Enter to advance
+  // Keyboard: A/B/C/D to select, Enter to advance (only when answered), Backspace to go back
   document.addEventListener('keydown', (e) => {
     const id = allScreens[current];
     const isMulti = id === 'screen-4';
     const isText = id === 'screen-7';
     const isQ = id.startsWith('screen-') && !['screen-intro','screen-result','screen-thanks'].includes(id);
+
+    // Backspace: go back (except when typing in an input)
+    if (e.key === 'Backspace' && isQ && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) {
+      e.preventDefault();
+      prevScreen();
+      return;
+    }
+
     if (!isQ) return;
 
     const qNum = id === 'screen-2b' ? '2b' : id.replace('screen-', '');
@@ -1002,14 +1070,33 @@
       if (opts[keys[k]]) opts[keys[k]].click();
     }
 
-    if (e.key === 'Enter' && !isText) {
-      const btn = document.getElementById('btn-' + qNum);
-      if (btn && btn.style.pointerEvents !== 'none') {
-        if (id === 'screen-2') handleQ2Next();
-        else if (id === 'screen-6' || id === 'screen-7') showResult();
-        else if (id === 'screen-2b') goToScreenByName('screen-3');
-        else nextScreen();
+    if (e.key === 'Enter') {
+      // Prevent Enter in "other" inputs from submitting when no answer
+      if (['INPUT','TEXTAREA'].includes(document.activeElement?.tagName) && !isText) {
+        const active = document.activeElement;
+        const otherInputs = document.querySelectorAll('.other-wrap input');
+        if (Array.from(otherInputs).includes(active)) {
+          e.preventDefault();
+          if (!canAdvance(id)) {
+            triggerShake(id);
+            return;
+          }
+        }
       }
+      if (isText) {
+        // Q7 is optional — Enter advances
+        if (id === 'screen-7') { e.preventDefault(); showResult(); }
+        return;
+      }
+      e.preventDefault();
+      if (!canAdvance(id)) {
+        triggerShake(id);
+        return;
+      }
+      if (id === 'screen-2') handleQ2Next();
+      else if (id === 'screen-6') showResult();
+      else if (id === 'screen-2b') goToScreenByName('screen-3');
+      else nextScreen();
     }
   });
 </script>
