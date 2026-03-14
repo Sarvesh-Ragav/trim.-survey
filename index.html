@@ -354,39 +354,6 @@
   }
 
   /* Results screen */
-  #screen-result .archetype-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(200,245,66,0.1);
-    border: 1px solid rgba(200,245,66,0.3);
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-  }
-
-  .archetype-name {
-    font-family: var(--serif);
-    font-size: clamp(40px, 6vw, 72px);
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-
-  .archetype-name em { color: var(--accent); font-style: italic; }
-
-  .archetype-desc {
-    font-size: 17px;
-    color: var(--gray4);
-    font-weight: 300;
-    line-height: 1.7;
-    max-width: 520px;
-    margin-bottom: 40px;
-  }
-
   .founding-card {
     background: var(--gray);
     border: 1px solid var(--gray2);
@@ -607,7 +574,6 @@
     <div class="intro-meta">
       <div class="intro-pill">6 questions</div>
       <div class="intro-pill">Under 2 minutes</div>
-      <div class="intro-pill">Get your fitness archetype</div>
       <div class="intro-pill">Founding member spot</div>
     </div>
     <div class="cta-wrap">
@@ -810,7 +776,7 @@
     </div>
     <div class="cta-wrap" id="cta-6">
       <button class="btn-back" onclick="prevScreen()">← Back</button>
-      <button class="btn-next" onclick="showResult()" id="btn-6" style="opacity:0.4;pointer-events:none">See my result <span class="arrow">→</span></button>
+      <button class="btn-next" onclick="showResult()" id="btn-6" style="opacity:0.4;pointer-events:none">Continue <span class="arrow">→</span></button>
       <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
@@ -826,16 +792,13 @@
     </div>
     <div class="cta-wrap" id="cta-7">
       <button class="btn-back" onclick="prevScreen()">← Back</button>
-      <button class="btn-next" onclick="showResult()" id="btn-7" style="opacity:1;pointer-events:all">See my result <span class="arrow">→</span></button>
+      <button class="btn-next" onclick="showResult()" id="btn-7" style="opacity:1;pointer-events:all">Continue <span class="arrow">→</span></button>
       <div class="press-hint">press <kbd>Enter</kbd> · <kbd>Backspace</kbd> to go back</div>
     </div>
   </div>
 
   <!-- RESULT -->
   <div class="screen" id="screen-result" style="overflow-y:auto;padding-top:100px;padding-bottom:60px;justify-content:flex-start;">
-    <div class="archetype-badge">✦ Your fitness archetype</div>
-    <div class="archetype-name" id="archetype-name">The <em>Grinder</em></div>
-    <div class="archetype-desc" id="archetype-desc">You show up. Not always perfectly, not always on schedule — but you show up. You've outgrown apps that treat you like a beginner, and you're done searching a broken food database just to log your dal.</div>
     <div class="founding-card">
       <h3>Claim your founding member spot ✦</h3>
       <p>Trim is built for people like you. Drop your email — you'll get early access before anyone else, your name in the founding members list, and free premium for 3 months.</p>
@@ -995,24 +958,8 @@
     if (btn) { btn.style.opacity = '0.4'; btn.style.pointerEvents = 'none'; }
   }
 
-  function getArchetype() {
-    const goal = answers['1'];
-    const pain = answers['3'];
-    const freq = answers['5'];
-    const pay = answers['6'];
-    if (goal === 'recomp') return { name: 'The <em>Recomper</em>', desc: "You want both. Not satisfied just losing weight — you want to look strong. You understand nutrition matters, not just effort. Most apps weren't built for you. Trim was." };
-    if (freq === '5-6' || freq === 'daily') return { name: 'The <em>Grinder</em>', desc: "The gym is non-negotiable for you. You've built the discipline — you just need tools that match your level. Logging food in a broken database? That's beneath you. You deserve smarter." };
-    if (pain === 'indian_food' || (pain && pain.includes('indian'))) return { name: 'The <em>Desi Lifter</em>', desc: "You eat real food — dal, roti, sabzi — and you're tired of apps that have no clue what that means. You shouldn't have to approximate your culture to track your health. Trim fixes that." };
-    if (goal === 'lose_fat') return { name: 'The <em>Transformer</em>', desc: "You have a clear goal and the commitment to get there. What's been missing is a daily system that keeps you honest without feeling like homework. That's exactly what we're building." };
-    if (pay === 'ai') return { name: 'The <em>Tech-Forward Athlete</em>', desc: "You've seen enough bad AI features to be skeptical — and that's fair. You'll only pay when the intelligence is real. We're betting on making it so good you won't question it." };
-    return { name: 'The <em>Consistent One</em>', desc: "You show up. Not always perfectly, not always on schedule — but you show up. You've outgrown apps that treat you like a beginner. You need something that respects your consistency." };
-  }
-
   function showResult() {
     answers['7'] = document.getElementById('freetext-7') ? document.getElementById('freetext-7').value.trim() : '';
-    const a = getArchetype();
-    document.getElementById('archetype-name').innerHTML = a.name;
-    document.getElementById('archetype-desc').textContent = a.desc;
     goToScreenByName('screen-result');
     document.getElementById('progress-bar').style.width = '100%';
   }
@@ -1033,7 +980,7 @@
   }
 
   function shareWhatsApp() {
-    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: " + SHARE_URL);
+    const text = encodeURIComponent("I just took the Trim fitness survey 💪 Check it out — they're building something actually good for us: " + SHARE_URL);
     window.open('https://wa.me/?text=' + text, '_blank');
   }
 
