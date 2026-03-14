@@ -1032,12 +1032,12 @@
   }
 
   function shareWhatsApp() {
-    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: https://jointrim.in");
+    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: https://trim-survey.vercel.app/");
     window.open('https://wa.me/?text=' + text, '_blank');
   }
 
   function shareLink() {
-    navigator.clipboard.writeText('https://jointrim.in').then(() => {
+    navigator.clipboard.writeText('https://trim-survey.vercel.app/').then(() => {
       const btn = document.querySelector('.btn-share:last-child');
       const orig = btn.innerHTML;
       btn.innerHTML = '✓ Copied!';
