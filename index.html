@@ -861,6 +861,7 @@
 
 <script>
   // Screen order: intro → Q1 → Q2 → Q2b(conditional) → Q3 → Q4 → Q5 → Q6 → Q7 → result → thanks
+  const SHARE_URL = 'https://trim-survey.vercel.app/';
   const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-thanks'];
   let current = 0;
   const answers = {};
@@ -1032,12 +1033,12 @@
   }
 
   function shareWhatsApp() {
-    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: https://trim-survey.vercel.app/");
+    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: " + SHARE_URL);
     window.open('https://wa.me/?text=' + text, '_blank');
   }
 
   function shareLink() {
-    navigator.clipboard.writeText('https://trim-survey.vercel.app/').then(() => {
+    navigator.clipboard.writeText(SHARE_URL).then(() => {
       const btn = document.querySelector('.btn-share:last-child');
       const orig = btn.innerHTML;
       btn.innerHTML = '✓ Copied!';
