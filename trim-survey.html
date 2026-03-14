@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trim — Shape the Future of Fitness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ec;
+    --accent: #c8f542;
+    --accent-dark: #a8d620;
+    --gray: #1a1a1a;
+    --gray2: #2a2a2a;
+    --gray3: #555;
+    --gray4: #888;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    overflow: hidden;
+  }
+
+  /* Progress bar */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    z-index: 100;
+    width: 0%;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50;
+  }
+
+  .logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+
+  .logo span { color: var(--accent); }
+
+  .step-counter {
+    font-size: 13px;
+    color: var(--gray4);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* Screens container */
+  #screens {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 10vw;
+    opacity: 0;
+    transform: translateY(40px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    max-width: 900px;
+    margin: 0 auto;
+    left: 0; right: 0;
+  }
+
+  .screen.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .screen.exit-up {
+    opacity: 0;
+    transform: translateY(-40px);
+    pointer-events: none;
+  }
+
+  /* Question label */
+  .q-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .q-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* Question text */
+  .q-text {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4.5vw, 52px);
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 12px;
+    max-width: 700px;
+  }
+
+  .q-text em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .q-sub {
+    font-size: 15px;
+    color: var(--gray4);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* Options grid */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--gray);
+    border: 1px solid var(--gray2);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .option:hover {
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: rgba(200, 245, 66, 0.08);
+  }
+
+  .option .key {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--gray3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray4);
+    flex-shrink: 0;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .option.selected .key {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--black);
+  }
+
+  .option .label {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Multi-select options grid */
+  .options.multi {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+
+  /* Text input */
+  .text-input-wrap {
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .text-input-wrap input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--gray2);
+    padding: 12px 0;
+    font-size: clamp(20px, 3vw, 32px);
+    font-family: var(--serif);
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .text-input-wrap input::placeholder { color: var(--gray3); }
+  .text-input-wrap input:focus { border-bottom-color: var(--accent); }
+
+  .input-hint {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--gray4);
+  }
+
+  /* CTA Button */
+  .cta-wrap {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .btn-next {
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-next:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-next:active { transform: scale(0.98); }
+
+  .btn-next .arrow { font-size: 18px; transition: transform 0.2s; }
+  .btn-next:hover .arrow { transform: translateX(4px); }
+
+  .press-hint {
+    font-size: 12px;
+    color: var(--gray4);
+  }
+
+  .press-hint kbd {
+    background: var(--gray2);
+    border: 1px solid var(--gray3);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: var(--sans);
+    font-size: 11px;
+  }
+
+  /* Intro screen */
+  #screen-intro .q-text {
+    font-size: clamp(36px, 5.5vw, 64px);
+  }
+
+  .intro-meta {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .intro-pill {
+    font-size: 13px;
+    color: var(--gray4);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .intro-pill::before {
+    content: '◆';
+    color: var(--accent);
+    font-size: 8px;
+  }
+
+  /* Results screen */
+  #screen-result .archetype-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,245,66,0.1);
+    border: 1px solid rgba(200,245,66,0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .archetype-name {
+    font-family: var(--serif);
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .archetype-name em { color: var(--accent); font-style: italic; }
+
+  .archetype-desc {
+    font-size: 17px;
+    color: var(--gray4);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+
+  .founding-card {
+    background: var(--gray);
+    border: 1px solid var(--gray2);
+    border-radius: 16px;
+    padding: 28px 32px;
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  .founding-card h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .founding-card p {
+    font-size: 14px;
+    color: var(--gray4);
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .founding-card input {
+    width: 100%;
+    background: var(--gray2);
+    border: 1px solid var(--gray3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: var(--white);
+    font-family: var(--sans);
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .founding-card input:focus { border-color: var(--accent); }
+  .founding-card input::placeholder { color: var(--gray3); }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-submit:hover { background: var(--accent-dark); }
+
+  /* Thank you screen */
+  #screen-thanks {
+    align-items: center;
+    text-align: center;
+  }
+
+  .thanks-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(200,245,66,0.1);
+    border: 1px solid rgba(200,245,66,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 32px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,245,66,0.2); }
+    50% { box-shadow: 0 0 0 16px rgba(200,245,66,0); }
+  }
+
+  .thanks-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 5vw, 56px);
+    margin-bottom: 16px;
+  }
+
+  .thanks-title em { color: var(--accent); font-style: italic; }
+
+  .thanks-sub {
+    font-size: 17px;
+    color: var(--gray4);
+    font-weight: 300;
+    max-width: 460px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .share-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-share {
+    background: var(--gray);
+    border: 1px solid var(--gray2);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-share:hover { border-color: var(--accent); color: var(--accent); }
+
+  .member-number {
+    font-size: 13px;
+    color: var(--gray4);
+    margin-top: 24px;
+  }
+
+  .member-number strong { color: var(--accent); }
+
+  /* Other / write-in input beneath options */
+  .other-wrap {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--gray);
+    border: 1px solid var(--gray2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .other-wrap:focus-within { border-color: var(--accent); }
+
+  .other-wrap .key {
+    width: 28px; height: 28px;
+    border: 1px solid var(--gray3);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--gray4);
+    flex-shrink: 0; transition: all 0.2s;
+  }
+
+  .other-wrap input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--white);
+    font-family: var(--sans);
+  }
+
+  .other-wrap input::placeholder { color: var(--gray3); }
+
+  /* Background decoration */
+  .bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-orb-1 {
+    width: 600px; height: 600px;
+    background: rgba(200,245,66,0.04);
+    top: -200px; right: -200px;
+  }
+
+  .bg-orb-2 {
+    width: 400px; height: 400px;
+    background: rgba(200,245,66,0.03);
+    bottom: -100px; left: -100px;
+  }
+
+  /* Keyboard shortcut handler */
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .screen { padding: 80px 6vw; }
+    .press-hint { display: none; }
+    .options.multi { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="logo">trim<span>.</span></div>
+  <div class="step-counter" id="step-counter"></div>
+</nav>
+
+<div id="screens">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="q-label">fitness research</div>
+    <div class="q-text">Help us build the <em>gym app</em> you actually deserve.</div>
+    <div class="intro-meta">
+      <div class="intro-pill">6 questions</div>
+      <div class="intro-pill">Under 2 minutes</div>
+      <div class="intro-pill">Get your fitness archetype</div>
+      <div class="intro-pill">Founding member spot</div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="nextScreen()">Let's go <span class="arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- Q1: Fitness goal -->
+  <div class="screen" id="screen-1">
+    <div class="q-label">Question 1 of 7</div>
+    <div class="q-text">What's your <em>main</em> fitness goal right now?</div>
+    <div class="q-sub">Pick the one that drives you most.</div>
+    <div class="options" id="opts-1">
+      <div class="option" data-q="1" data-val="lose_fat" onclick="selectOption(this, '1')">
+        <div class="key">A</div><div class="label">Lose fat, get lean</div>
+      </div>
+      <div class="option" data-q="1" data-val="recomp" onclick="selectOption(this, '1')">
+        <div class="key">B</div><div class="label">Build muscle while losing fat (body recomp)</div>
+      </div>
+      <div class="option" data-q="1" data-val="bulk" onclick="selectOption(this, '1')">
+        <div class="key">C</div><div class="label">Bulk up and gain mass</div>
+      </div>
+      <div class="option" data-q="1" data-val="maintain" onclick="selectOption(this, '1')">
+        <div class="key">D</div><div class="label">Stay consistent and maintain what I have</div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="nextScreen()" id="btn-1" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q2: Current tracking -->
+  <div class="screen" id="screen-2">
+    <div class="q-label">Question 2 of 7</div>
+    <div class="q-text">How do you <em>currently</em> track food and workouts?</div>
+    <div class="q-sub">Be honest — we won't judge.</div>
+    <div class="options" id="opts-2">
+      <div class="option" data-q="2" data-val="app" onclick="selectOption(this, '2')">
+        <div class="key">A</div><div class="label">I use a fitness app</div>
+      </div>
+      <div class="option" data-q="2" data-val="mental" onclick="selectOption(this, '2')">
+        <div class="key">B</div><div class="label">Mental notes — I just remember roughly</div>
+      </div>
+      <div class="option" data-q="2" data-val="notes" onclick="selectOption(this, '2')">
+        <div class="key">C</div><div class="label">Notes app or spreadsheet</div>
+      </div>
+      <div class="option" data-q="2" data-val="nothing" onclick="selectOption(this, '2')">
+        <div class="key">D</div><div class="label">I don't track at all</div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="handleQ2Next()" id="btn-2" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q2b: Which app -->
+  <div class="screen" id="screen-2b">
+    <div class="q-label">Question 2b of 7</div>
+    <div class="q-text">Which app do you <em>currently</em> use?</div>
+    <div class="q-sub">Pick one — or type yours in if it's not listed.</div>
+    <div class="options" id="opts-2b">
+      <div class="option" data-q="2b" data-val="myfitnesspal" onclick="selectOption(this, '2b')">
+        <div class="key">A</div><div class="label">MyFitnessPal</div>
+      </div>
+      <div class="option" data-q="2b" data-val="healthifyme" onclick="selectOption(this, '2b')">
+        <div class="key">B</div><div class="label">HealthifyMe</div>
+      </div>
+      <div class="option" data-q="2b" data-val="cronometer" onclick="selectOption(this, '2b')">
+        <div class="key">C</div><div class="label">Cronometer</div>
+      </div>
+      <div class="option" data-q="2b" data-val="fittr" onclick="selectOption(this, '2b')">
+        <div class="key">D</div><div class="label">Fittr</div>
+      </div>
+    </div>
+    <div class="other-wrap" id="other-2b-wrap">
+      <div class="key" id="other-2b-key">E</div>
+      <input type="text" id="other-2b" placeholder="Something else — type the app name" oninput="handleOtherInput('2b', this.value)" />
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="goToScreenByName('screen-3')" id="btn-2b" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q3: App pain points -->
+  <div class="screen" id="screen-3">
+    <div class="q-label">Question 3 of 7</div>
+    <div class="q-text">What's the <em>biggest frustration</em> with fitness apps you've tried?</div>
+    <div class="q-sub">Pick the one that annoys you most.</div>
+    <div class="options" id="opts-3">
+      <div class="option" data-q="3" data-val="complex" onclick="selectOption(this, '3')">
+        <div class="key">A</div><div class="label">Too complicated — too many features, too much friction</div>
+      </div>
+      <div class="option" data-q="3" data-val="indian_food" onclick="selectOption(this, '3')">
+        <div class="key">B</div><div class="label">Doesn't understand Indian food at all</div>
+      </div>
+      <div class="option" data-q="3" data-val="paywall" onclick="selectOption(this, '3')">
+        <div class="key">C</div><div class="label">Everything useful is behind a paywall</div>
+      </div>
+      <div class="option" data-q="3" data-val="no_motivation" onclick="selectOption(this, '3')">
+        <div class="key">D</div><div class="label">No motivation — feels like a chore, not a companion</div>
+      </div>
+    </div>
+    <div class="other-wrap" id="other-3-wrap">
+      <div class="key">E</div>
+      <input type="text" id="other-3" placeholder="Something else — tell us in your own words" oninput="handleOtherInput('3', this.value)" />
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="nextScreen()" id="btn-3" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q4: Gym equipment -->
+  <div class="screen" id="screen-4">
+    <div class="q-label">Question 4 of 7</div>
+    <div class="q-text">What gym equipment do you <em>regularly</em> use?</div>
+    <div class="q-sub">Select all that apply.</div>
+    <div class="options multi" id="opts-4">
+      <div class="option" data-q="4" data-val="dumbbells" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Dumbbells & free weights</div>
+      </div>
+      <div class="option" data-q="4" data-val="machines" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Weight machines</div>
+      </div>
+      <div class="option" data-q="4" data-val="cardio" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Treadmill / bike / cardio machines</div>
+      </div>
+      <div class="option" data-q="4" data-val="barbells" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Barbell & bench press</div>
+      </div>
+      <div class="option" data-q="4" data-val="bodyweight" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Bodyweight / calisthenics</div>
+      </div>
+      <div class="option" data-q="4" data-val="home" onclick="selectMulti(this, '4')">
+        <div class="key">✓</div><div class="label">Home gym setup</div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="nextScreen()" id="btn-4" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q5: Workout frequency -->
+  <div class="screen" id="screen-5">
+    <div class="q-label">Question 5 of 7</div>
+    <div class="q-text">How many days a week do you <em>actually</em> hit the gym?</div>
+    <div class="q-sub">Your real number, not your goal.</div>
+    <div class="options" id="opts-5">
+      <div class="option" data-q="5" data-val="1-2" onclick="selectOption(this, '5')">
+        <div class="key">A</div><div class="label">1–2 days — casual, when I can</div>
+      </div>
+      <div class="option" data-q="5" data-val="3-4" onclick="selectOption(this, '5')">
+        <div class="key">B</div><div class="label">3–4 days — solid routine</div>
+      </div>
+      <div class="option" data-q="5" data-val="5-6" onclick="selectOption(this, '5')">
+        <div class="key">C</div><div class="label">5–6 days — serious about it</div>
+      </div>
+      <div class="option" data-q="5" data-val="daily" onclick="selectOption(this, '5')">
+        <div class="key">D</div><div class="label">Every day — gym is life</div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="nextScreen()" id="btn-5" style="opacity:0.4;pointer-events:none">OK <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q6: Pay trigger -->
+  <div class="screen" id="screen-6">
+    <div class="q-label">Question 6 of 7</div>
+    <div class="q-text">What would actually make you <em>pay</em> for a fitness app?</div>
+    <div class="q-sub">One honest answer.</div>
+    <div class="options" id="opts-6">
+      <div class="option" data-q="6" data-val="results" onclick="selectOption(this, '6')">
+        <div class="key">A</div><div class="label">If I saw real results — the app earns the payment</div>
+      </div>
+      <div class="option" data-q="6" data-val="ai" onclick="selectOption(this, '6')">
+        <div class="key">B</div><div class="label">If the AI was genuinely smart, not just a gimmick</div>
+      </div>
+      <div class="option" data-q="6" data-val="simplicity" onclick="selectOption(this, '6')">
+        <div class="key">C</div><div class="label">If it was the simplest, cleanest app I've ever used</div>
+      </div>
+      <div class="option" data-q="6" data-val="community" onclick="selectOption(this, '6')">
+        <div class="key">D</div><div class="label">If my friends were on it and I could compete/share</div>
+      </div>
+    </div>
+    <div class="other-wrap" id="other-6-wrap">
+      <div class="key">E</div>
+      <input type="text" id="other-6" placeholder="Something else — your honest take" oninput="handleOtherInput('6', this.value)" />
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="showResult()" id="btn-6" style="opacity:0.4;pointer-events:none">See my result <span class="arrow">→</span></button>
+      <div class="press-hint">press <kbd>Enter</kbd></div>
+    </div>
+  </div>
+
+  <!-- Q7: Anything else -->
+  <div class="screen" id="screen-7">
+    <div class="q-label">Question 7 of 7</div>
+    <div class="q-text">One thing you <em>wish</em> a fitness app would do — that none of them do.</div>
+    <div class="q-sub">Optional but gold for us. Type anything.</div>
+    <div class="text-input-wrap">
+      <input type="text" id="freetext-7" placeholder="Type your answer here…" oninput="handleFreeText(this.value)" />
+      <div class="input-hint">Press Enter to continue, or skip →</div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-next" onclick="showResult()" id="btn-7" style="opacity:1;pointer-events:all">See my result <span class="arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result" style="overflow-y:auto;padding-top:100px;padding-bottom:60px;justify-content:flex-start;">
+    <div class="archetype-badge">✦ Your fitness archetype</div>
+    <div class="archetype-name" id="archetype-name">The <em>Grinder</em></div>
+    <div class="archetype-desc" id="archetype-desc">You show up. Not always perfectly, not always on schedule — but you show up. You've outgrown apps that treat you like a beginner, and you're done searching a broken food database just to log your dal.</div>
+    <div class="founding-card">
+      <h3>Claim your founding member spot ✦</h3>
+      <p>Trim is built for people like you. Drop your email — you'll get early access before anyone else, your name in the founding members list, and free premium for 3 months.</p>
+      <input type="text" id="fname" placeholder="Your first name" />
+      <input type="email" id="femail" placeholder="Your email address" />
+      <button class="btn-submit" onclick="submitEmail()">Claim my spot →</button>
+    </div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div class="screen" id="screen-thanks" style="align-items:center;text-align:center;">
+    <div class="thanks-icon">✦</div>
+    <div class="thanks-title">You're in, <em id="thanks-name">friend</em>.</div>
+    <div class="thanks-sub">You're one of the founding members shaping Trim. We'll reach out the moment early access opens — and you'll get 3 months of premium on us.</div>
+    <div class="share-row">
+      <button class="btn-share" onclick="shareWhatsApp()">↗ Share on WhatsApp</button>
+      <button class="btn-share" onclick="shareLink()">⎘ Copy link</button>
+    </div>
+    <div class="member-number">Founding member <strong>#<span id="member-num">47</span></strong></div>
+  </div>
+
+</div>
+
+<script>
+  // Screen order: intro → Q1 → Q2 → Q2b(conditional) → Q3 → Q4 → Q5 → Q6 → Q7 → result → thanks
+  const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-thanks'];
+  let current = 0;
+  const answers = {};
+  const multiAnswers = { '4': [] };
+  const otherText = {};
+
+  function goTo(idx) {
+    const prev = document.getElementById(allScreens[current]);
+    prev.classList.remove('active');
+    prev.classList.add('exit-up');
+    setTimeout(() => prev.classList.remove('exit-up'), 600);
+    current = idx;
+    const next = document.getElementById(allScreens[current]);
+    next.classList.add('active');
+    updateProgress();
+    updateCounter();
+  }
+
+  function goToScreenByName(id) {
+    const idx = allScreens.indexOf(id);
+    if (idx !== -1) goTo(idx);
+  }
+
+  function nextScreen() { goTo(current + 1); }
+
+  // Q2: if they picked "app" → show Q2b (which app), else skip to Q3
+  function handleQ2Next() {
+    if (answers['2'] === 'app') {
+      goToScreenByName('screen-2b');
+    } else {
+      goToScreenByName('screen-3');
+    }
+  }
+
+  // Q numbers that map to visible step counters (1-7, skipping 2b)
+  const visibleQScreens = ['screen-1','screen-2','screen-3','screen-4','screen-5','screen-6','screen-7'];
+
+  function updateProgress() {
+    const id = allScreens[current];
+    const qIdx = visibleQScreens.indexOf(id);
+    let pct = 0;
+    if (id === 'screen-intro') pct = 0;
+    else if (id === 'screen-2b') pct = (2 / 7) * 100;
+    else if (id === 'screen-result' || id === 'screen-thanks') pct = 100;
+    else if (qIdx !== -1) pct = (qIdx / 7) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }
+
+  function updateCounter() {
+    const c = document.getElementById('step-counter');
+    const id = allScreens[current];
+    const qIdx = visibleQScreens.indexOf(id);
+    if (id === 'screen-2b') c.textContent = '2 / 7';
+    else if (qIdx !== -1) c.textContent = (qIdx + 1) + ' / 7';
+    else c.textContent = '';
+  }
+
+  function selectOption(el, q) {
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[q] = el.dataset.val;
+    // clear other input if they pick a preset
+    const otherInput = document.getElementById('other-' + q);
+    if (otherInput) otherInput.value = '';
+    const otherKey = document.getElementById('other-' + q + '-key');
+    if (otherKey) { otherKey.style.background = ''; otherKey.style.borderColor = ''; otherKey.style.color = ''; }
+    enableBtn(q);
+  }
+
+  function handleOtherInput(q, val) {
+    // deselect any chosen option
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    const otherKey = document.getElementById('other-' + q + '-key');
+    if (val.trim().length > 0) {
+      answers[q] = 'other: ' + val.trim();
+      otherText[q] = val.trim();
+      if (otherKey) { otherKey.style.background = 'var(--accent)'; otherKey.style.borderColor = 'var(--accent)'; otherKey.style.color = 'var(--black)'; }
+      enableBtn(q);
+    } else {
+      delete answers[q];
+      if (otherKey) { otherKey.style.background = ''; otherKey.style.borderColor = ''; otherKey.style.color = ''; }
+      disableBtn(q);
+    }
+  }
+
+  function handleFreeText(val) {
+    answers['7'] = val.trim();
+  }
+
+  function selectMulti(el, q) {
+    el.classList.toggle('selected');
+    const val = el.dataset.val;
+    const arr = multiAnswers[q];
+    const idx = arr.indexOf(val);
+    if (idx > -1) arr.splice(idx, 1);
+    else arr.push(val);
+    if (arr.length > 0) enableBtn(q);
+    else disableBtn(q);
+  }
+
+  function enableBtn(q) {
+    const btn = document.getElementById('btn-' + q);
+    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; }
+  }
+
+  function disableBtn(q) {
+    const btn = document.getElementById('btn-' + q);
+    if (btn) { btn.style.opacity = '0.4'; btn.style.pointerEvents = 'none'; }
+  }
+
+  function getArchetype() {
+    const goal = answers['1'];
+    const pain = answers['3'];
+    const freq = answers['5'];
+    const pay = answers['6'];
+    if (goal === 'recomp') return { name: 'The <em>Recomper</em>', desc: "You want both. Not satisfied just losing weight — you want to look strong. You understand nutrition matters, not just effort. Most apps weren't built for you. Trim was." };
+    if (freq === '5-6' || freq === 'daily') return { name: 'The <em>Grinder</em>', desc: "The gym is non-negotiable for you. You've built the discipline — you just need tools that match your level. Logging food in a broken database? That's beneath you. You deserve smarter." };
+    if (pain === 'indian_food' || (pain && pain.includes('indian'))) return { name: 'The <em>Desi Lifter</em>', desc: "You eat real food — dal, roti, sabzi — and you're tired of apps that have no clue what that means. You shouldn't have to approximate your culture to track your health. Trim fixes that." };
+    if (goal === 'lose_fat') return { name: 'The <em>Transformer</em>', desc: "You have a clear goal and the commitment to get there. What's been missing is a daily system that keeps you honest without feeling like homework. That's exactly what we're building." };
+    if (pay === 'ai') return { name: 'The <em>Tech-Forward Athlete</em>', desc: "You've seen enough bad AI features to be skeptical — and that's fair. You'll only pay when the intelligence is real. We're betting on making it so good you won't question it." };
+    return { name: 'The <em>Consistent One</em>', desc: "You show up. Not always perfectly, not always on schedule — but you show up. You've outgrown apps that treat you like a beginner. You need something that respects your consistency." };
+  }
+
+  function showResult() {
+    answers['7'] = document.getElementById('freetext-7') ? document.getElementById('freetext-7').value.trim() : '';
+    const a = getArchetype();
+    document.getElementById('archetype-name').innerHTML = a.name;
+    document.getElementById('archetype-desc').textContent = a.desc;
+    goToScreenByName('screen-result');
+    document.getElementById('progress-bar').style.width = '100%';
+  }
+
+  function submitEmail() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    if (!name || !email || !email.includes('@')) {
+      document.getElementById('femail').style.borderColor = '#ff4444';
+      setTimeout(() => document.getElementById('femail').style.borderColor = '', 2000);
+      return;
+    }
+    document.getElementById('thanks-name').textContent = name;
+    document.getElementById('member-num').textContent = Math.floor(Math.random() * 30) + 38;
+    goToScreenByName('screen-thanks');
+    document.getElementById('progress-bar').style.width = '100%';
+    console.log('New submission:', { name, email, answers, multiAnswers, otherText });
+  }
+
+  function shareWhatsApp() {
+    const text = encodeURIComponent("I just took the Trim fitness survey and got my archetype 💪 Check it out — they're building something actually good for us: https://jointrim.in");
+    window.open('https://wa.me/?text=' + text, '_blank');
+  }
+
+  function shareLink() {
+    navigator.clipboard.writeText('https://jointrim.in').then(() => {
+      const btn = document.querySelector('.btn-share:last-child');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      setTimeout(() => btn.innerHTML = orig, 2000);
+    });
+  }
+
+  // Keyboard: A/B/C/D to select, Enter to advance
+  document.addEventListener('keydown', (e) => {
+    const id = allScreens[current];
+    const isMulti = id === 'screen-4';
+    const isText = id === 'screen-7';
+    const isQ = id.startsWith('screen-') && !['screen-intro','screen-result','screen-thanks'].includes(id);
+    if (!isQ) return;
+
+    const qNum = id === 'screen-2b' ? '2b' : id.replace('screen-', '');
+    const keys = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+    const k = e.key.toLowerCase();
+
+    if (!isMulti && !isText && k in keys) {
+      const opts = document.querySelectorAll(`#${id} .option`);
+      if (opts[keys[k]]) opts[keys[k]].click();
+    }
+
+    if (e.key === 'Enter' && !isText) {
+      const btn = document.getElementById('btn-' + qNum);
+      if (btn && btn.style.pointerEvents !== 'none') {
+        if (id === 'screen-2') handleQ2Next();
+        else if (id === 'screen-6' || id === 'screen-7') showResult();
+        else if (id === 'screen-2b') goToScreenByName('screen-3');
+        else nextScreen();
+      }
+    }
+  });
+</script>
+</body>
+</html>
