@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Trim — Shape the Future of Fitness</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -544,12 +544,50 @@
     bottom: -100px; left: -100px;
   }
 
-  /* Keyboard shortcut handler */
-  @media (max-width: 600px) {
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    html, body { overflow-y: auto; -webkit-overflow-scrolling: touch; }
     nav { padding: 16px 20px; }
-    .screen { padding: 80px 6vw; }
-    .press-hint { display: none; }
+    .logo { font-size: 18px; }
+    .screen {
+      padding: 100px 20px 40px;
+      justify-content: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .q-text { font-size: clamp(24px, 6vw, 36px); }
+    #screen-intro .q-text { font-size: clamp(28px, 7vw, 40px); }
+    .q-sub { font-size: 14px; margin-bottom: 32px; }
+    .intro-meta { gap: 12px; margin-bottom: 32px; }
+    .intro-pill { font-size: 12px; }
+    .option { padding: 14px 16px; font-size: 14px; min-height: 48px; }
+    .option .key { width: 24px; height: 24px; font-size: 11px; }
     .options.multi { grid-template-columns: 1fr; }
+    .cta-wrap {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .btn-next, .btn-back { padding: 12px 20px; font-size: 14px; }
+    .founding-card { padding: 20px; margin-bottom: 24px; }
+    .founding-card h3 { font-size: 18px; }
+    .founding-card input { padding: 12px 14px; font-size: 16px; }
+    .thanks-icon { width: 64px; height: 64px; font-size: 28px; margin-bottom: 24px; }
+    .thanks-title { font-size: clamp(26px, 6vw, 40px); }
+    .thanks-sub { font-size: 15px; margin-bottom: 28px; }
+    .share-row { flex-direction: column; align-items: center; gap: 10px; }
+    .btn-share { width: 100%; max-width: 280px; justify-content: center; }
+    .other-wrap { padding: 12px 16px; }
+    .other-wrap input { font-size: 14px; }
+    .text-input-wrap input { font-size: clamp(18px, 5vw, 24px); }
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 14px 16px; }
+    .screen { padding: 90px 16px 32px; }
+    .press-hint { display: none; }
+    .q-label { font-size: 11px; margin-bottom: 16px; }
+    .q-label::before { width: 16px; }
   }
 </style>
 </head>
@@ -572,7 +610,7 @@
     <div class="q-label">fitness research</div>
     <div class="q-text">Help us build the <em>gym app</em> you actually deserve.</div>
     <div class="intro-meta">
-      <div class="intro-pill">6 questions</div>
+      <div class="intro-pill">7 questions</div>
       <div class="intro-pill">Under 2 minutes</div>
       <div class="intro-pill">Founding member spot</div>
     </div>
