@@ -899,10 +899,10 @@
   const SUPABASE_URL = 'https://ckibxqpcdqslnrjxebbd.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNraWJ4cXBjZHFzbG5yanhlYmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MzQwNTQsImV4cCI6MjA4OTExMDA1NH0.ZTzK6ZKMz7ZgsAuwnQ7OuUwJaKs60WRG8H0Q931Bk5I';
 
-  let supabase = null;
+  let supabaseClient = null;
   try {
     if (SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('your-project') && typeof window.supabase !== 'undefined') {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
   } catch (e) { console.warn('Supabase init failed:', e); }
 
@@ -1047,9 +1047,9 @@
   }
 
   async function saveResponse(data) {
-    if (!supabase) return;
+    if (!supabaseClient) return;
     try {
-      const { error } = await supabase.from('survey_responses').insert(data);
+      const { error } = await supabaseClient.from('survey_responses').insert(data);
       if (error) console.error('Supabase error:', error);
     } catch (e) { console.error('Save failed:', e); }
   }
