@@ -733,30 +733,31 @@
     </div>
   </div>
 
-  <!-- Q4: Gym equipment -->
+  <!-- Q4: Logging habit breakdown -->
   <div class="screen" id="screen-4">
     <div class="q-label">Question 4 of 7</div>
-    <div class="q-text">What gym equipment do you <em>regularly</em> use?</div>
-    <div class="q-sub">Select all that apply.</div>
-    <div class="options multi" id="opts-4">
-      <div class="option" data-q="4" data-val="dumbbells" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Dumbbells & free weights</div>
+    <div class="q-text">Where does your <em>logging habit</em> usually break down?</div>
+    <div class="q-sub">Pick the one that resonates most.</div>
+    <div class="options" id="opts-4">
+      <div class="option" data-q="4" data-val="forget_midday" onclick="selectOption(this, '4')">
+        <div class="key">A</div><div class="label">I forget to log mid-day and then give up on the whole day</div>
       </div>
-      <div class="option" data-q="4" data-val="machines" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Weight machines</div>
+      <div class="option" data-q="4" data-val="takes_too_long" onclick="selectOption(this, '4')">
+        <div class="key">B</div><div class="label">It takes too long — I lose motivation after 2 minutes</div>
       </div>
-      <div class="option" data-q="4" data-val="cardio" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Treadmill / bike / cardio machines</div>
+      <div class="option" data-q="4" data-val="cant_find" onclick="selectOption(this, '4')">
+        <div class="key">C</div><div class="label">I eat something I can't find in the app and just skip it</div>
       </div>
-      <div class="option" data-q="4" data-val="barbells" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Barbell & bench press</div>
+      <div class="option" data-q="4" data-val="stop_when_busy" onclick="selectOption(this, '4')">
+        <div class="key">D</div><div class="label">I log for a week then stop when life gets busy</div>
       </div>
-      <div class="option" data-q="4" data-val="bodyweight" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Bodyweight / calisthenics</div>
+      <div class="option" data-q="4" data-val="never_start" onclick="selectOption(this, '4')">
+        <div class="key">E</div><div class="label">I never really start — the setup feels overwhelming</div>
       </div>
-      <div class="option" data-q="4" data-val="home" onclick="selectMulti(this, '4')">
-        <div class="key">✓</div><div class="label">Home gym setup</div>
-      </div>
+    </div>
+    <div class="other-wrap" id="other-4-wrap">
+      <div class="key" id="other-4-key">F</div>
+      <input type="text" id="other-4" placeholder="Other — type it" oninput="handleOtherInput('4', this.value)" />
     </div>
     <div class="cta-wrap" id="cta-4">
       <button class="btn-back" onclick="prevScreen()">← Back</button>
@@ -765,23 +766,26 @@
     </div>
   </div>
 
-  <!-- Q5: Workout frequency -->
+  <!-- Q5: One thing perfectly -->
   <div class="screen" id="screen-5">
     <div class="q-label">Question 5 of 7</div>
-    <div class="q-text">How many days a week do you <em>actually</em> hit the gym?</div>
-    <div class="q-sub">Your real number, not your goal.</div>
+    <div class="q-text">If this app could only do <em>ONE thing</em> perfectly, what would it be?</div>
+    <div class="q-sub">Pick the one that matters most to you.</div>
     <div class="options" id="opts-5">
-      <div class="option" data-q="5" data-val="1-2" onclick="selectOption(this, '5')">
-        <div class="key">A</div><div class="label">1–2 days — casual, when I can</div>
+      <div class="option" data-q="5" data-val="indian_food" onclick="selectOption(this, '5')">
+        <div class="key">A</div><div class="label">Understand and estimate Indian food without me searching a database</div>
       </div>
-      <div class="option" data-q="5" data-val="3-4" onclick="selectOption(this, '5')">
-        <div class="key">B</div><div class="label">3–4 days — solid routine</div>
+      <div class="option" data-q="5" data-val="goal_weight" onclick="selectOption(this, '5')">
+        <div class="key">B</div><div class="label">Show me exactly how far I am from my goal weight, updated daily</div>
       </div>
-      <div class="option" data-q="5" data-val="5-6" onclick="selectOption(this, '5')">
-        <div class="key">C</div><div class="label">5–6 days — serious about it</div>
+      <div class="option" data-q="5" data-val="zero_friction" onclick="selectOption(this, '5')">
+        <div class="key">C</div><div class="label">Track calories and protein with zero friction — log in under 10 seconds</div>
       </div>
-      <div class="option" data-q="5" data-val="daily" onclick="selectOption(this, '5')">
-        <div class="key">D</div><div class="label">Every day — gym is life</div>
+      <div class="option" data-q="5" data-val="ai_coach" onclick="selectOption(this, '5')">
+        <div class="key">D</div><div class="label">Give me an AI coach that actually gives honest, useful feedback</div>
+      </div>
+      <div class="option" data-q="5" data-val="streaks" onclick="selectOption(this, '5')">
+        <div class="key">E</div><div class="label">Keep me consistent with streaks and reminders that don't annoy me</div>
       </div>
     </div>
     <div class="cta-wrap" id="cta-5">
@@ -868,7 +872,7 @@
   const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-thanks'];
   let current = 0;
   const answers = {};
-  const multiAnswers = { '4': [] };
+  const multiAnswers = {};
   const otherText = {};
 
   function goTo(idx) {
@@ -898,7 +902,6 @@
   function canAdvance(id) {
     const qNum = id === 'screen-2b' ? '2b' : id.replace('screen-', '');
     if (id === 'screen-7') return true; // optional
-    if (id === 'screen-4') return multiAnswers['4'] && multiAnswers['4'].length > 0;
     const btn = document.getElementById('btn-' + qNum);
     return btn && btn.style.pointerEvents !== 'none';
   }
@@ -1036,7 +1039,7 @@
   // Keyboard: A/B/C/D to select, Enter to advance (only when answered), Backspace to go back
   document.addEventListener('keydown', (e) => {
     const id = allScreens[current];
-    const isMulti = id === 'screen-4';
+    const isMulti = false;
     const isText = id === 'screen-7';
     const isQ = id.startsWith('screen-') && !['screen-intro','screen-result','screen-thanks'].includes(id);
 
@@ -1050,7 +1053,7 @@
     if (!isQ) return;
 
     const qNum = id === 'screen-2b' ? '2b' : id.replace('screen-', '');
-    const keys = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+    const keys = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 };
     const k = e.key.toLowerCase();
 
     if (!isMulti && !isText && k in keys) {
