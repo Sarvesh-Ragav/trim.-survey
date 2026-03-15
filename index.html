@@ -412,6 +412,22 @@
 
   .btn-submit:hover { background: var(--accent-dark); }
 
+  .btn-skip {
+    background: transparent;
+    color: var(--gray4);
+    border: none;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: color 0.2s;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .btn-skip:hover { color: var(--white); }
+
   /* Thank you screen */
   #screen-thanks {
     align-items: center;
@@ -849,6 +865,7 @@
       <input type="text" id="fname" placeholder="Your first name" />
       <input type="email" id="femail" placeholder="Your email address" />
       <button class="btn-submit" onclick="submitEmail()">Claim my spot →</button>
+      <button class="btn-skip" onclick="skipFounding()">Skip</button>
     </div>
   </div>
 
@@ -1020,6 +1037,13 @@
     goToScreenByName('screen-thanks');
     document.getElementById('progress-bar').style.width = '100%';
     console.log('New submission:', { name, email, answers, multiAnswers, otherText });
+  }
+
+  function skipFounding() {
+    document.getElementById('thanks-name').textContent = 'friend';
+    document.getElementById('member-num').textContent = '—';
+    goToScreenByName('screen-thanks');
+    document.getElementById('progress-bar').style.width = '100%';
   }
 
   function shareWhatsApp() {
