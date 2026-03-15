@@ -8,6 +8,7 @@
 <link rel="apple-touch-icon" href="assets/trim-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -894,6 +895,14 @@
 </div>
 
 <script>
+  // Supabase — replace with your project URL and anon key from Project Settings → API
+  const SUPABASE_URL = 'https://your-project.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNraWJ4cXBjZHFzbG5yanhlYmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MzQwNTQsImV4cCI6MjA4OTExMDA1NH0.ZTzK6ZKMz7ZgsAuwnQ7OuUwJaKs60WRG8H0Q931Bk5I';
+
+  const supabase = (SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('your-project'))
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
   // Screen order: intro → Q1 → Q2 → Q2b(conditional) → Q3 → Q4 → Q5 → Q6 → Q7 → result → thanks
   const SHARE_URL = 'https://trim-survey.vercel.app/';
   const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-thanks'];
@@ -1034,6 +1043,14 @@
     document.getElementById('progress-bar').style.width = '100%';
   }
 
+  async function saveResponse(data) {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('survey_responses').insert(data);
+      if (error) console.error('Supabase error:', error);
+    } catch (e) { console.error('Save failed:', e); }
+  }
+
   function submitEmail() {
     const name = document.getElementById('fname').value.trim();
     const email = document.getElementById('femail').value.trim();
@@ -1048,7 +1065,7 @@
     document.getElementById('member-num').textContent = Math.floor(Math.random() * 30) + 38;
     goToScreenByName('screen-thanks');
     document.getElementById('progress-bar').style.width = '100%';
-    console.log('New submission:', { name, email, answers, multiAnswers, otherText });
+    saveResponse({ name, email, claimed_spot: true, answers, multi_answers: multiAnswers, other_text: otherText });
   }
 
   function skipFounding() {
@@ -1056,6 +1073,7 @@
     document.getElementById('thanks-skipped').style.display = 'block';
     goToScreenByName('screen-thanks');
     document.getElementById('progress-bar').style.width = '100%';
+    saveResponse({ claimed_spot: false, answers, multi_answers: multiAnswers, other_text: otherText });
   }
 
   function shareWhatsApp() {
