@@ -872,13 +872,23 @@
   <!-- THANK YOU -->
   <div class="screen" id="screen-thanks" style="align-items:center;text-align:center;">
     <div class="thanks-icon">✦</div>
-    <div class="thanks-title">You're in, <em id="thanks-name">friend</em>.</div>
-    <div class="thanks-sub">You're one of the founding members shaping Trim. We'll reach out the moment early access opens — and you'll get 3 months of premium on us.</div>
-    <div class="share-row">
-      <button class="btn-share" onclick="shareWhatsApp()">↗ Share on WhatsApp</button>
-      <button class="btn-share" onclick="shareLink()">⎘ Copy link</button>
+    <div id="thanks-claimed">
+      <div class="thanks-title">You're in, <em id="thanks-name">friend</em>.</div>
+      <div class="thanks-sub">You're one of the founding members shaping Trim. We'll reach out the moment early access opens — and you'll get 3 months of premium on us.</div>
+      <div class="share-row">
+        <button class="btn-share" onclick="shareWhatsApp()">↗ Share on WhatsApp</button>
+        <button class="btn-share" onclick="shareLink()">⎘ Copy link</button>
+      </div>
+      <div class="member-number">Founding member <strong>#<span id="member-num">47</span></strong></div>
     </div>
-    <div class="member-number">Founding member <strong>#<span id="member-num">47</span></strong></div>
+    <div id="thanks-skipped" style="display:none;">
+      <div class="thanks-title">Thanks for your <em>feedback</em>.</div>
+      <div class="thanks-sub">Your input helps us build the gym app you actually deserve. Share the survey with friends who care about fitness.</div>
+      <div class="share-row">
+        <button class="btn-share" onclick="shareWhatsApp()">↗ Share on WhatsApp</button>
+        <button class="btn-share" onclick="shareLink()">⎘ Copy link</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1032,6 +1042,8 @@
       setTimeout(() => document.getElementById('femail').style.borderColor = '', 2000);
       return;
     }
+    document.getElementById('thanks-claimed').style.display = 'block';
+    document.getElementById('thanks-skipped').style.display = 'none';
     document.getElementById('thanks-name').textContent = name;
     document.getElementById('member-num').textContent = Math.floor(Math.random() * 30) + 38;
     goToScreenByName('screen-thanks');
@@ -1040,8 +1052,8 @@
   }
 
   function skipFounding() {
-    document.getElementById('thanks-name').textContent = 'friend';
-    document.getElementById('member-num').textContent = '—';
+    document.getElementById('thanks-claimed').style.display = 'none';
+    document.getElementById('thanks-skipped').style.display = 'block';
     goToScreenByName('screen-thanks');
     document.getElementById('progress-bar').style.width = '100%';
   }
