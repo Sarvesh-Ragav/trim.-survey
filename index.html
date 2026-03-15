@@ -858,7 +858,21 @@
       <input type="text" id="fname" placeholder="Your first name" />
       <input type="email" id="femail" placeholder="Your email address" />
       <button class="btn-submit" onclick="submitEmail()">Claim my spot →</button>
-      <button class="btn-skip" onclick="skipFounding()">Skip</button>
+      <button class="btn-skip" onclick="showSkipForm()">Skip</button>
+    </div>
+  </div>
+
+  <!-- SKIP FORM: collect name/email when they skip -->
+  <div class="screen" id="screen-skip-form" style="overflow-y:auto;padding-top:100px;padding-bottom:60px;justify-content:flex-start;">
+    <div class="founding-card">
+      <h3>One last thing ✦</h3>
+      <p>We'd love to stay in touch. Leave your name and email — we'll reach out when early access opens.</p>
+      <input type="text" id="skip-fname" placeholder="Your first name" />
+      <input type="email" id="skip-femail" placeholder="Your email address" />
+      <div class="cta-wrap" style="margin-top:20px;">
+        <button class="btn-back" onclick="goToScreenByName('screen-result')">← Back</button>
+        <button class="btn-submit" onclick="submitSkipForm()">Done →</button>
+      </div>
     </div>
   </div>
 
@@ -874,7 +888,7 @@
       </div>
     </div>
     <div id="thanks-skipped" style="display:none;">
-      <div class="thanks-title">Thanks for your <em>feedback</em>.</div>
+      <div class="thanks-title">Thanks for your <em>feedback</em>, <span id="thanks-skipped-name">friend</span>.</div>
       <div class="thanks-sub">Your input helps us build the gym app you actually deserve. Share the survey with friends who care about fitness.</div>
       <div class="share-row">
         <button class="btn-share" onclick="shareWhatsApp()">↗ Share on WhatsApp</button>
@@ -899,7 +913,7 @@
 
   // Screen order: intro → Q1 → Q2 → Q2b(conditional) → Q3 → Q4 → Q5 → Q6 → Q7 → result → thanks
   const SHARE_URL = 'https://trim-survey.vercel.app/';
-  const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-thanks'];
+  const allScreens = ['screen-intro','screen-1','screen-2','screen-2b','screen-3','screen-4','screen-5','screen-6','screen-7','screen-result','screen-skip-form','screen-thanks'];
   let current = 0;
   const answers = {};
   const multiAnswers = {};
@@ -964,7 +978,7 @@
     let pct = 0;
     if (id === 'screen-intro') pct = 0;
     else if (id === 'screen-2b') pct = (2 / 7) * 100;
-    else if (id === 'screen-result' || id === 'screen-thanks') pct = 100;
+    else if (id === 'screen-result' || id === 'screen-skip-form' || id === 'screen-thanks') pct = 100;
     else if (qIdx !== -1) pct = (qIdx / 7) * 100;
     document.getElementById('progress-bar').style.width = pct + '%';
   }
@@ -1061,12 +1075,25 @@
     saveResponse({ name, email, claimed_spot: true, answers, multi_answers: multiAnswers, other_text: otherText });
   }
 
-  function skipFounding() {
+  function showSkipForm() {
+    goToScreenByName('screen-skip-form');
+    document.getElementById('progress-bar').style.width = '100%';
+  }
+
+  function submitSkipForm() {
+    const name = document.getElementById('skip-fname').value.trim();
+    const email = document.getElementById('skip-femail').value.trim();
+    if (!name || !email || !email.includes('@')) {
+      document.getElementById('skip-femail').style.borderColor = '#ff4444';
+      setTimeout(() => document.getElementById('skip-femail').style.borderColor = '', 2000);
+      return;
+    }
     document.getElementById('thanks-claimed').style.display = 'none';
     document.getElementById('thanks-skipped').style.display = 'block';
+    document.getElementById('thanks-skipped-name').textContent = name;
     goToScreenByName('screen-thanks');
     document.getElementById('progress-bar').style.width = '100%';
-    saveResponse({ claimed_spot: false, answers, multi_answers: multiAnswers, other_text: otherText });
+    saveResponse({ name, email, claimed_spot: false, answers, multi_answers: multiAnswers, other_text: otherText });
   }
 
   function shareWhatsApp() {
